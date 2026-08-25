@@ -84,6 +84,21 @@ public class MinStackTest {
     }
 
     @Test
+    @DisplayName("Дубликаты минимального значения")
+    void testDuplicatesOfMinValue2() {
+        minStack.push(6);
+        minStack.push(3);
+        minStack.push(3);
+
+        assertEquals(3, minStack.getMin());
+
+        minStack.pop();
+
+        assertEquals(3, minStack.getMin());
+        assertEquals(3, minStack.top());
+    }
+
+    @Test
     @DisplayName("Отрицательные числа и ноль")
     void testNegativeNumbersAndZero() {
         minStack.push(-2);
@@ -147,6 +162,17 @@ public class MinStackTest {
     void testEmptyingStackCompletely() {
         minStack.push(42);
         minStack.push(43);
+        minStack.pop();
+        minStack.pop();
+
+        assertThrows(EmptyStackException.class, () -> minStack.getMin());
+        assertThrows(EmptyStackException.class, () -> minStack.top());
+    }
+    @Test
+    @DisplayName("Опустошение стека")
+    void testEmptyingStackCompletely2() {
+        minStack.push(0);
+        minStack.push(1);
         minStack.pop();
         minStack.pop();
 

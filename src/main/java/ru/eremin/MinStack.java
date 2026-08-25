@@ -22,10 +22,8 @@ public class MinStack {
     public void push(int val) {
         stack.push(val);
 
-        if (minValues.peek() == null || minValues.peek() > val) {
+        if (minValues.peek() == null || minValues.peek() >= val) {
             minValues.push(val);
-        } else {
-            minValues.push(minValues.peek());
         }
     }
 
@@ -37,8 +35,12 @@ public class MinStack {
         if (stack.isEmpty()) {
             throw new EmptyStackException();
         }
+
+        Integer deleted = stack.peek();
+        if (minValues.peek().equals(deleted)) {
+            minValues.pop();
+        }
         stack.pop();
-        minValues.pop();
     }
 
     /**
