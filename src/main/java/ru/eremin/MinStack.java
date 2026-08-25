@@ -1,18 +1,13 @@
 package ru.eremin;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.EmptyStackException;
 
 
 public class MinStack {
-    private final Deque<Integer> stack;
-    private final Deque<Integer> minValues;
-
+    private Node topNode;
 
     public MinStack() {
-        this.stack = new ArrayDeque<>();
-        this.minValues = new ArrayDeque<>();
+        topNode = null;
     }
 
     /**
@@ -20,27 +15,24 @@ public class MinStack {
      */
 
     public void push(int val) {
-        stack.push(val);
-
-        if (minValues.peek() == null || minValues.peek() >= val) {
-            minValues.push(val);
+        if (topNode == null) {
+            topNode = new Node(val, val, null);
+        } else {
+            int newMin = Math.min(val, topNode.currentMin());
+            topNode = new Node(val, newMin, topNode);
         }
     }
 
     /**
      * Удаляет верхний элемент за О(1)
+     *
      * @throws EmptyStackException если стек пуст
      */
     public void pop() {
-        if (stack.isEmpty()) {
+        if (topNode == null) {
             throw new EmptyStackException();
         }
-
-        Integer deleted = stack.peek();
-        if (minValues.peek().equals(deleted)) {
-            minValues.pop();
-        }
-        stack.pop();
+        topNode = topNode.nextNode();
     }
 
     /**
@@ -48,10 +40,10 @@ public class MinStack {
      * @throws EmptyStackException если стек пуст
      */
     public int top() {
-        if (stack.isEmpty()) {
+        if (topNode == null) {
             throw new EmptyStackException();
         }
-        return stack.peek();
+        return topNode.val();
     }
 
 
@@ -60,9 +52,15 @@ public class MinStack {
      * @throws EmptyStackException если стек пуст
      */
     public int getMin() {
-        if (stack.isEmpty()) {
+        if (topNode == null) {
             throw new EmptyStackException();
         }
-        return minValues.peek();
+        return topNode.currentMin();
+    }
+
+    private record Node(
+            int val,
+            int currentMin,
+            Node nextNode) {
     }
 }
